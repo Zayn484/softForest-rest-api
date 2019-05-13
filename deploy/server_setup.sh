@@ -20,7 +20,7 @@ mkdir -p $PROJECT_BASE_PATH
 git clone $PROJECT_GIT_URL $PROJECT_BASE_PATH/softforest-rest-api
 
 mkdir -p $VIRTUALENV_BASE_PATH
-python3 -m venv $VIRTUALENV_BASE_PATH/softforest_api
+python3 -m venv $VIRTUALENV_BASE_PATH/softforest
 
 $VIRTUALENV_BASE_PATH/softforest_api/bin/pip install -r $PROJECT_BASE_PATH/softforest-rest-api/requirements.txt
 
@@ -28,15 +28,15 @@ $VIRTUALENV_BASE_PATH/softforest_api/bin/pip install -r $PROJECT_BASE_PATH/softf
 cd $PROJECT_BASE_PATH/softforest-rest-api/src
 
 # Setup Supervisor to run our uwsgi process.
-cp $PROJECT_BASE_PATH/softforest-rest-api/deploy/supervisor_softforest_api.conf /etc/supervisor/conf.d/softforest_api.conf
+cp $PROJECT_BASE_PATH/softforest-rest-api/deploy/supervisor_softforest_api.conf /etc/supervisor/conf.d/softforest.conf
 supervisorctl reread
 supervisorctl update
-supervisorctl restart softforest_api
+supervisorctl restart softforest
 
 # Setup nginx to make our application accessible.
-cp $PROJECT_BASE_PATH/softforest-rest-api/deploy/nginx_softforest_api.conf /etc/nginx/sites-available/softforest_api.conf
+cp $PROJECT_BASE_PATH/softforest-rest-api/deploy/nginx_softforest_api.conf /etc/nginx/sites-available/softforest.conf
 rm /etc/nginx/sites-enabled/default
-ln -s /etc/nginx/sites-available/softforest_api.conf /etc/nginx/sites-enabled/softforest_api.conf
+ln -s /etc/nginx/sites-available/softforest.conf /etc/nginx/sites-enabled/softforest.conf
 systemctl restart nginx.service
 
 echo "DONE! :)"
