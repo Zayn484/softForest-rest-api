@@ -22,7 +22,7 @@ git clone $PROJECT_GIT_URL $PROJECT_BASE_PATH/softforest-rest-api
 mkdir -p $VIRTUALENV_BASE_PATH
 python3 -m venv $VIRTUALENV_BASE_PATH/softforest
 
-$VIRTUALENV_BASE_PATH/softforest_api/bin/pip install -r $PROJECT_BASE_PATH/softforest-rest-api/requirements.txt
+$VIRTUALENV_BASE_PATH/softforest/bin/pip install -r $PROJECT_BASE_PATH/softforest-rest-api/requirements.txt
 
 # Run migrations
 cd $PROJECT_BASE_PATH/softforest-rest-api/src
