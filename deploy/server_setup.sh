@@ -16,7 +16,6 @@ echo "Installing dependencies..."
 apt-get update
 apt-get install -y python3-dev python3-venv sqlite python-pip supervisor nginx git
 apt-get install redis
-sudo redis-server
 
 mkdir -p $PROJECT_BASE_PATH
 git clone $PROJECT_GIT_URL $PROJECT_BASE_PATH/softforest-rest-api
