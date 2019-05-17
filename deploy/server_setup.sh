@@ -17,6 +17,8 @@ apt-get update
 apt-get install -y python3-dev python3-venv sqlite python-pip supervisor nginx git
 apt-get install redis
 apt install daphne
+apt install pathlib
+apt install channels
 
 mkdir -p $PROJECT_BASE_PATH
 git clone $PROJECT_GIT_URL $PROJECT_BASE_PATH/softforest-rest-api
