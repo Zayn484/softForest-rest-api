@@ -31,7 +31,7 @@ cd $PROJECT_BASE_PATH/softforest-rest-api/src
 cp $PROJECT_BASE_PATH/softforest-rest-api/deploy/supervisor_softforest_api.conf /etc/supervisor/conf.d/softforest.conf
 supervisorctl reread
 supervisorctl update
-supervisorctl restart softforest
+supervisorctl restart all
 
 # Setup nginx to make our application accessible.
 cp $PROJECT_BASE_PATH/softforest-rest-api/deploy/nginx_softforest_api.conf /etc/nginx/sites-available/softforest.conf
