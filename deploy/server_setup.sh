@@ -24,6 +24,7 @@ mkdir -p $VIRTUALENV_BASE_PATH
 python3 -m venv $VIRTUALENV_BASE_PATH/softforest
 
 pip3 install -r $PROJECT_BASE_PATH/softforest-rest-api/requirements.txt
+$VIRTUALENV_BASE_PATH/softforest/bin/pip install -r $PROJECT_BASE_PATH/softforest-rest-api/requirements.txt
 
 # Run migrations
 cd $PROJECT_BASE_PATH/softforest-rest-api/src
