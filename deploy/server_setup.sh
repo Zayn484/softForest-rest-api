@@ -34,16 +34,16 @@ $VIRTUALENV_BASE_PATH/softforest/bin/pip install -r $PROJECT_BASE_PATH/softfores
 cd $PROJECT_BASE_PATH/softforest-rest-api/src
 python3 manage.py migrate
 
-# Setup Supervisor to run our uwsgi process.
-cp $PROJECT_BASE_PATH/softforest-rest-api/deploy/supervisor_softforest_api.conf /etc/supervisor/conf.d/softforest.conf
-supervisorctl reread
-supervisorctl update
-supervisorctl restart all
+# # Setup Supervisor to run our uwsgi process.
+# cp $PROJECT_BASE_PATH/softforest-rest-api/deploy/supervisor_softforest_api.conf /etc/supervisor/conf.d/softforest.conf
+# supervisorctl reread
+# supervisorctl update
+# supervisorctl restart all
 
-# Setup nginx to make our application accessible.
-cp $PROJECT_BASE_PATH/softforest-rest-api/deploy/nginx_softforest_api.conf /etc/nginx/sites-available/softforest.conf
-rm /etc/nginx/sites-enabled/default
-ln -s /etc/nginx/sites-available/softforest.conf /etc/nginx/sites-enabled/softforest.conf
-systemctl restart nginx.service
+# # Setup nginx to make our application accessible.
+# cp $PROJECT_BASE_PATH/softforest-rest-api/deploy/nginx_softforest_api.conf /etc/nginx/sites-available/softforest.conf
+# rm /etc/nginx/sites-enabled/default
+# ln -s /etc/nginx/sites-available/softforest.conf /etc/nginx/sites-enabled/softforest.conf
+# systemctl restart nginx.service
 
 echo "DONE! :)"
