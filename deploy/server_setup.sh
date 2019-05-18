@@ -17,6 +17,7 @@ apt-get update
 apt-get install -y python3-dev python3-venv sqlite python3-pip supervisor nginx git
 apt-get install redis
 pip3 install pathlib
+pip3 install django==2.1.7
 pip3 install daphne
 pip3 install -U channels
 
@@ -30,6 +31,7 @@ $VIRTUALENV_BASE_PATH/softforest/bin/pip install -r $PROJECT_BASE_PATH/softfores
 
 # Run migrations
 cd $PROJECT_BASE_PATH/softforest-rest-api/src
+python manage.py migrate
 
 # Setup Supervisor to run our uwsgi process.
 cp $PROJECT_BASE_PATH/softforest-rest-api/deploy/supervisor_softforest_api.conf /etc/supervisor/conf.d/softforest.conf
