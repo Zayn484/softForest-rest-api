@@ -16,34 +16,29 @@ echo "Installing dependencies..."
 apt-get update
 apt-get install -y python3-dev python3-venv sqlite python3-pip supervisor nginx git
 apt-get install redis
-pip3 install pathlib
-pip3 install django==2.1.7
-pip3 install daphne
-pip3 install -U channels
 
 mkdir -p $PROJECT_BASE_PATH
 git clone $PROJECT_GIT_URL $PROJECT_BASE_PATH/softforest-rest-api
 
 mkdir -p $VIRTUALENV_BASE_PATH
 python3 -m venv $VIRTUALENV_BASE_PATH/softforest
-source /usr/local/virtualenvs/softforest/bin/activate
 
-$VIRTUALENV_BASE_PATH/softforest/bin/pip install -r $PROJECT_BASE_PATH/softforest-rest-api/requirements.txt
+pip3 install -r $PROJECT_BASE_PATH/softforest-rest-api/requirements.txt
 
 # Run migrations
 cd $PROJECT_BASE_PATH/softforest-rest-api/src
 python3 manage.py migrate
 
-# # Setup Supervisor to run our uwsgi process.
-# cp $PROJECT_BASE_PATH/softforest-rest-api/deploy/supervisor_softforest_api.conf /etc/supervisor/conf.d/softforest.conf
-# supervisorctl reread
-# supervisorctl update
-# supervisorctl restart all
+# Setup Supervisor to run our uwsgi process.
+cp $PROJECT_BASE_PATH/softforest-rest-api/deploy/supervisor_softforest_api.conf /etc/supervisor/conf.d/softforest.conf
+supervisorctl reread
+supervisorctl update
+supervisorctl restart all
 
-# # Setup nginx to make our application accessible.
-# cp $PROJECT_BASE_PATH/softforest-rest-api/deploy/nginx_softforest_api.conf /etc/nginx/sites-available/softforest.conf
-# rm /etc/nginx/sites-enabled/default
-# ln -s /etc/nginx/sites-available/softforest.conf /etc/nginx/sites-enabled/softforest.conf
-# systemctl restart nginx.service
+# Setup nginx to make our application accessible.
+cp $PROJECT_BASE_PATH/softforest-rest-api/deploy/nginx_softforest_api.conf /etc/nginx/sites-available/softforest.conf
+rm /etc/nginx/sites-enabled/default
+ln -s /etc/nginx/sites-available/softforest.conf /etc/nginx/sites-enabled/softforest.conf
+systemctl restart nginx.service
 
 echo "DONE! :)"
