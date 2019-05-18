@@ -26,12 +26,13 @@ git clone $PROJECT_GIT_URL $PROJECT_BASE_PATH/softforest-rest-api
 
 mkdir -p $VIRTUALENV_BASE_PATH
 python3 -m venv $VIRTUALENV_BASE_PATH/softforest
+source /usr/local/virtualenvs/softforest/bin/activate
 
 $VIRTUALENV_BASE_PATH/softforest/bin/pip install -r $PROJECT_BASE_PATH/softforest-rest-api/requirements.txt
 
 # Run migrations
 cd $PROJECT_BASE_PATH/softforest-rest-api/src
-python manage.py migrate
+python3 manage.py migrate
 
 # Setup Supervisor to run our uwsgi process.
 cp $PROJECT_BASE_PATH/softforest-rest-api/deploy/supervisor_softforest_api.conf /etc/supervisor/conf.d/softforest.conf
