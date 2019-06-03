@@ -13,7 +13,6 @@ class ContactSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def to_internal_value(self, data):
-        print(data)
         return data
 
 
@@ -24,12 +23,13 @@ class ChatSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Chat
-        fields = ('id', 'messages', 'participants')
+        fields = ('id', 'messages', 'participants', 'group')
+        read_only = 'id'
 
     def create(self, validated_data):
-        print(validated_data)
         participants = validated_data.pop('participants')
-        chat = Chat()
+        group = validated_data['group']
+        chat = Chat(group=group)
         chat.save()
         for username in participants:
             contact = get_user_contact(username)
