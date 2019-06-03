@@ -1,4 +1,4 @@
-
+from django.db.models import Q
 from rest_framework import viewsets, filters
 from rest_framework.parsers import FormParser, MultiPartParser, JSONParser
 from rest_framework.permissions import AllowAny
@@ -27,36 +27,7 @@ class UserViewSet(viewsets.ModelViewSet):
         if self.action == 'upload_profile_picture':
             return serializers.ProfileImageSerializer
         return self.serializer_class
-    #
-    # @action(detail=True, methods=["GET"])
-    # def recommendations(self, request, id=None):
-    #     user = self.get_object()
-    #     recommendations = models.Recommendation.objects.filter(user=user)
-    #     serializer = serializers.RecommendationSerializer(recommendations, many=True)
-    #
-    #     return Response(serializer.data, status=200)
-    #
-    # @action(detail=True, methods=["GET"])
-    # def profile(self, request, id=None):
-    #     user = self.get_object()
-    #     profiles = models.Profile.objects.filter(user=user)
-    #     print(profiles)
-    #     serializer = serializers.ProfileSerializer(profiles)
-    #
-    #     return Response(serializer.data, status=200)
-    #
-    # @action(detail=True, methods="POST")
-    # def recommendation(self, request, id=None):
-    #     print('Recommendation POST')
-    #     user = self.get_object()
-    #     data = request.data
-    #     data["user"] = user.id
-    #     serializer = serializers.RecommendationSerializer(data=data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data, status=201)
-    #     return Response(serializer.errors, status=400)
-    #
+
     @action(detail=True, methods="POST")
     def profile(self, request, id=None):
         user = self.get_object()
@@ -68,10 +39,35 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
+
+class ProfileViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.ProfileSerializer
+    permission_classes = [AllowAny, ]
+    queryset = models.Profile.objects.all()
+    #lookup_field = 'user'
+
+    def get_queryset(self):
+        # For searching profile
+        queryset_list = models.Profile.objects.all()
+        query = self.request.GET.get("search_profile")
+        if query:
+            queryset_list = queryset_list.filter(
+                Q(profile_name__icontains=query) |
+                Q(profile_title__icontains=query)
+            ).distinct()
+
+        return queryset_list
+
+    def get_serializer_class(self):
+        if self.action == 'upload_profile_picture':
+            return serializers.ProfileImageSerializer
+        return self.serializer_class
+
     @action(detail=True, methods=["POST"], url_path='upload-profile-picture')
     def upload_profile_picture(self, request, pk=None):
         user = self.get_object()
         serializer = self.get_serializer(
+            user,
             data=request.data
         )
         if serializer.is_valid():
@@ -82,13 +78,6 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(
             serializer.errors, status=400
         )
-
-
-class ProfileViewSet(viewsets.ModelViewSet):
-    serializer_class = serializers.UserDetailSerializer
-    permission_classes = [AllowAny, ]
-    queryset = models.User.objects.all()
-    lookup_field = 'username'
 
 
 class LoginViewSet(viewsets.ViewSet):

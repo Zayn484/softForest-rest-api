@@ -15,7 +15,7 @@ SECRET_KEY = 'hd_+ioog^9rv3jdzqd3wq&8=a6pm%mu=@x+fmg49is0r5ut7(r'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ec2-3-19-30-7.us-east-2.compute.amazonaws.com']
+ALLOWED_HOSTS = []
 
 # User model
 AUTH_USER_MODEL = 'accounts.User'
@@ -46,17 +46,19 @@ INSTALLED_APPS = [
     'channels',
     'django_filters',
     'import_export',
+    'django_extensions',
 
     # Our apps
     'accounts',
     'chat',
     'carts',
     'comments',
+    'earnings',
     'modificationrequests',
     'projects',
     'orders',
     'tags',
-    'earnings'
+    'teams'
 
 ]
 
@@ -162,12 +164,12 @@ STATICFILES_DIR = [
 
 ]
 
-STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_cdn", "static_root")
+STATIC_ROOT = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), "static_cdn", "static_root")
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_cdn", "media_root")
+MEDIA_ROOT = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), "static_cdn", "media_root")
 
-PROTECTED_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_cdn", "protected_media")
+PROTECTED_ROOT = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), "static_cdn", "protected_media")
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 150000000  # 150 MB
 

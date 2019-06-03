@@ -43,6 +43,7 @@ urlpatterns = [
     path('api/chat/', include('chat.api.urls', namespace='chat')),
     path('api/comments/', include('comments.api.urls', namespace='comments')),
     path('api/modification-requests/', include('modificationrequests.api.urls', namespace='modificationrequests')),
+    path('api/teams/', include('teams.api.urls', namespace='teams')),
     path('admin/', admin.site.urls)
 ]
 

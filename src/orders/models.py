@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from django.db.models.signals import pre_save,post_save
+from django.db.models.signals import pre_save,post_save,post_delete
 from projects.models import Project
 from carts.models import Cart
 from earnings.models import Balance
@@ -8,7 +8,6 @@ from earnings.models import Balance
 
 import stripe
 
-# STRIPE_SECRET_KEY = getattr(settings,"STRIPE_SECRET_KEY","sk_test_6ETSL1XtldnJi4aM7e8rGqvd009nkra50X")
 stripe.api_key = "sk_test_6ETSL1XtldnJi4aM7e8rGqvd009nkra50X"
 User = settings.AUTH_USER_MODEL
 
@@ -24,7 +23,6 @@ class BillingManager(models.Manager):
 class Billing(models.Model):
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
     full_name = models.CharField(max_length=120, null=True, blank=True,)
-    email = models.EmailField(max_length=120,null=True,blank=True)
     address = models.CharField(max_length=250, null=True, blank=True,)
     city = models.CharField(max_length=120, null=True, blank=True,)
     country = models.CharField(max_length=120, null=True, blank=True,)
@@ -41,15 +39,17 @@ class Billing(models.Model):
 
 
 def billing_profile_created_receiver(sender,instance, *args,**kwargs):
-    if not instance.customer_id and instance.email:
-        print('Actual Api Key Send To Stripe')
-        customer  = stripe.Customer.create(email = instance.email)
-        print(customer)
+    if not instance.customer_id and instance.user:
+        customer  = stripe.Customer.create(email = instance.user)
         instance.customer_id = customer.id
-
 
 pre_save.connect(billing_profile_created_receiver,sender=Billing)
 
+def billing_profile_delete_receiver(sender,instance,*args,**kwargs):
+    if instance:
+        stripe.Customer.delete(instance.customer_id)
+
+post_delete.connect(billing_profile_delete_receiver,sender=Billing)
 
 class Card(models.Model):
     billing_profile         = models.ForeignKey(Billing ,on_delete=models.CASCADE )

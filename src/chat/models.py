@@ -1,7 +1,8 @@
 from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.db import models
 
-User = get_user_model()
+User = settings.AUTH_USER_MODEL
 
 
 class Contact(models.Model):
@@ -24,6 +25,7 @@ class Message(models.Model):
 class Chat(models.Model):
     participants = models.ManyToManyField(Contact, related_name='chats')
     messages = models.ManyToManyField(Message, blank=True)
+    group = models.BooleanField(default=False)
 
     def __str__(self):
         return "{}".format(self.pk)
