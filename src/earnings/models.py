@@ -11,21 +11,14 @@ class BalanceManager(models.Manager):
            for i in cart:
                p_id = i.get('projects')
                p_qs = Project.objects.get(id=p_id)
-               price = 0
-               if p_qs.discount_rate != 0.00:
-                   price = p_qs.discount_rate
-                   print("IFFF ROHAIL")
-               else:
-                   price = p_qs.price
-                   print("ELSE ROHAIL")
-               SoldSoftwares.objects.new_add(user=p_qs.user, project=p_qs, price=price)
+               SoldSoftwares.objects.new_add(user=p_qs.user, project=p_qs, price=p_qs.price)
                b_qs = Balance.objects.filter(user=p_qs.user)
                if b_qs:
                     balance = b_qs[0].balance
-                    balance += price - p_qs.service_fees
+                    balance += p_qs.price - p_qs.service_fees
                     u_qs = Balance.objects.filter(user=p_qs.user).update(balance=balance)
                else:
-                    c_qs = Balance.objects.create(user=p_qs.user, balance=price - p_qs.service_fees)
+                    c_qs = Balance.objects.create(user=p_qs.user, balance=p_qs.price - p_qs.service_fees)
        except Exception as e:
            print(e)
 

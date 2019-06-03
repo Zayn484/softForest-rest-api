@@ -7,7 +7,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     """Serializer for selected fields of project"""
     class Meta:
         model =  Project
-        fields = ['id', 'title', 'image','description','price','discount_rate']
+        fields = ['id', 'title', 'image','description','price']
 
 
 class CartDetailSerializer(serializers.ModelSerializer):

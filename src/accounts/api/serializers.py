@@ -1,6 +1,7 @@
 from accounts import models
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
 from accounts.models import Recommendation, Profile
 
 
@@ -9,19 +10,16 @@ class ProfileImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ('id', 'image', )
+        fields = ('id', 'user', 'image')
         read_only_fields = ('id',)
 
 
 class ProfileSerializer(serializers.ModelSerializer):
     """Serializer for user profile"""
 
-    username = serializers.CharField(source='user.username', required=False)
-
     class Meta:
         model = Profile
-        fields = '__all__'
-        read_only_fields = ('id', 'image', )
+        fields = ('image', 'profile_name', 'profile_title', 'overview', 'skills')
 
 
 class RecommendationSerializer(serializers.ModelSerializer):
@@ -77,7 +75,6 @@ class UserSerializer(serializers.ModelSerializer):
                 profiles = validated_data.pop('profile')
                 if profiles:
                     profile = models.Profile(
-                        id=user.id,
                         user=user,
                         profile_name=profiles['profile_name'] or None,
                         profile_title=profiles['profile_title'] or None,
@@ -86,17 +83,6 @@ class UserSerializer(serializers.ModelSerializer):
                     )
                     profile.save()
 
-        return user
-
-    def update(self, instance, validated_data):
-        user = models.User.objects.get(email=instance.email)
-        if validated_data.get('password'):
-            user.set_password(validated_data.get('password' or instance.password))
-            user.save()
-        if validated_data.get('profile'):
-            profile = Profile.objects.get(user=instance)
-            profile.profile_name = validated_data.get('profile')['profile_name']
-            profile.save()
         return user
 
 

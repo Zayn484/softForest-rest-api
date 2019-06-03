@@ -1,17 +1,10 @@
 from django.db import models
-from django.db.models.signals import post_save
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.conf import settings
 import random
 import os
-import string
-from chat.models import Contact
 
 # Create your models here.
-
-
-def create_unique_id():
-    return ''.join(random.choices(string.digits, k=8))
 
 
 def get_filename_ext(filepath):
@@ -59,9 +52,8 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     """Represents user profile in our system"""
 
-    id = models.IntegerField(primary_key=True, default=create_unique_id)
     email = models.EmailField(max_length=255, unique=True)
-    username = models.CharField(max_length=255, unique=True)
+    username = models.CharField(max_length=255)
     occupation = models.CharField(max_length=120, blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -88,9 +80,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Profile(models.Model):
-    id = models.IntegerField(primary_key=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True,
-                             related_name='profile', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name='profile',
+                             on_delete=models.CASCADE)
     image = models.ImageField(upload_to=upload_image_path, null=True, blank=True)
     profile_name = models.CharField(max_length=120, blank=True, null=True)
     profile_title = models.CharField(max_length=250, blank=True, null=True)
@@ -111,12 +102,3 @@ class Recommendation(models.Model):
 
     def __str__(self):
         return str(self.user)
-
-
-# Creating contact from chat
-def user_post_reciever(sender, instance, created, **kwargs):
-    if created:
-        Contact.objects.create(user=instance)
-
-
-post_save.connect(user_post_reciever, sender=User)

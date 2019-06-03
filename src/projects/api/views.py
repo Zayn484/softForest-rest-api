@@ -86,7 +86,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
         categories = self.request.GET.get("categories")
         technologies = self.request.GET.get("technologies")
         prices = self.request.GET.get("price")
-        rating = self.request.GET.get("rating")
 
         category_params = []
         technology_params = []
@@ -115,9 +114,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
                 queryset_list = queryset_list.filter(price=0)
             if 'Paid' in price_params:
                 queryset_list = queryset_list.filter(price__gt=0)
-
-        if rating is not None:
-            queryset_list = queryset_list.filter(ratings__gte=rating)
 
         if query:
             queryset_list = queryset_list.filter(
@@ -260,19 +256,15 @@ class ProjectCardViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         query = self.request.GET.get("q")
-        user = self.request.GET.get("user")
         if query in ['desktop', 'mobile', 'web']:
             # query to list projects based on category
-            queryset = Project.objects.filter(category=query.capitalize()).order_by('-timestamp')
+            queryset = Project.objects.filter(category=query.capitalize()).order_by('-timestamp')[:15]
         elif query == "top-projects":
             # query to return top rated projects
-            queryset = Project.objects.filter(ratings__gte=4.0).order_by('-timestamp')
+            queryset = Project.objects.filter(ratings__gte=4.0).order_by('-timestamp')[:15]
         else:
             # query to return all projects
-            queryset = Project.objects.all().order_by('-timestamp')
-        if user:
-            # query to find user related projects
-            queryset = Project.objects.filter(user=user).order_by('-timestamp')
+            queryset = Project.objects.all().order_by('-timestamp')[:15]
         return queryset
 
 
