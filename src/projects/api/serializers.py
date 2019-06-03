@@ -173,13 +173,14 @@ class ProjectSerializer(serializers.ModelSerializer):
 class ProjectCardSerializer(serializers.ModelSerializer):
     """Serializer for selected project cards attributes"""
 
-    username = serializers.CharField(source='user.username')
+    username = serializers.CharField(source='user.username', required=False)
 
     class Meta:
         model = Project
         fields = [
             'id',
             'slug',
+            'user',
             'image',
             'title',
             'username',
@@ -200,9 +201,10 @@ class ProjectDetailSerializer(serializers.ModelSerializer):
     requirements = RequirementSerializer(many=True, read_only=True)
     tags = TagSerializer(many=True, read_only=True)
     file = FileSerializer(many=True, read_only=True)
+    user = serializers.IntegerField(source='user.id')
 
     class Meta:
         model = Project
         fields = '__all__'
-        depth = 1
+
 
