@@ -101,3 +101,18 @@ class LoginViewSet(viewsets.ViewSet):
                          'id': token.user_id,
                          'user_data': user_data,
                          'user_recommendations': user_recommendations})
+
+class ForgetPasswordViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.ForgetPasswordSerialier
+    lookup_field = 'user'
+    def get_queryset(self):
+        user = self.request.GET.get('user')
+        code = self.request.GET.get('code')
+        if user:
+            qs = models.ForgetPassword.objects.filter(user=user)
+            if qs.exists():
+                if qs.first().code == code:
+                    return models.ForgetPassword.objects.filter(user=user)
+                return models.ForgetPassword.objects.filter(user=None)
+        return models.ForgetPassword.objects.all()
+

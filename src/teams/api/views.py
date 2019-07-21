@@ -33,7 +33,9 @@ class InvitationViewSet(ModelViewSet):
                 Q(user=user) |
                 Q(recipient=recipient) &
                 Q(accepted=False)).order_by('-timestamp')
+
         return queryset
+
 
 class FriendsViewSet(ModelViewSet):
     """ViewSet For TeamMembers Model"""
@@ -41,6 +43,7 @@ class FriendsViewSet(ModelViewSet):
     serializer_class = FriendsSerializer
     lookup_field = 'user'
     queryset = Friend.objects.all()
+
 
 class MyFriendsViewSet(ModelViewSet):
     serializer_class = MyFriendSerializer

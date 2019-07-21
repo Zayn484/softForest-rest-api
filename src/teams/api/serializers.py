@@ -25,6 +25,7 @@ class InvitationSerializer(serializers.ModelSerializer):
         data = dict(ChainMap(*qs))
         return data
 
+
 class ProfileSerializer(serializers.ModelSerializer):
     """Profile Serializer"""
     class Meta:
@@ -53,11 +54,13 @@ class FriendsSerializer(serializers.ModelSerializer):
     #     instance.members.add(*members)
     #     return instance
 
+
 class MyFriendSerializer(serializers.ModelSerializer):
     members = ProfileSerializer(many=True)
+
     class Meta:
         model = Friend
-        fields='__all__'
+        fields = '__all__'
     
 
 

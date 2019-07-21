@@ -11,7 +11,6 @@ User = get_user_model()
 class ChatConsumer(WebsocketConsumer):
 
     def fetch_messages(self, data):
-        print(data)
         messages = get_last_10_messages(data['chatId'])
         content = {
             'command': 'messages',
@@ -20,7 +19,7 @@ class ChatConsumer(WebsocketConsumer):
         self.send_message(content)
 
     def new_message(self, data):
-        user_contact = get_user_contact(data['from'])
+        user_contact = get_user_contact(data['from'], None)
         message = Message.objects.create(
             contact=user_contact,
             content=data['message'])

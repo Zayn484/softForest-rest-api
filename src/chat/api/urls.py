@@ -4,7 +4,8 @@ from .views import (
     ChatDetailView,
     ChatCreateView,
     # ChatUpdateView,
-    ChatDeleteView
+    ChatDeleteView,
+    GroupCreateView
 )
 
 app_name = 'chat'
@@ -14,5 +15,6 @@ urlpatterns = [
     path('create/', ChatCreateView.as_view()),
     path('<pk>', ChatDetailView.as_view()),
     # path('<pk>/update/', ChatUpdateView.as_view()),
-    path('delete/', ChatDeleteView.as_view())
+    path('delete/', ChatDeleteView.as_view()),
+    path('group/create/', GroupCreateView.as_view()),
 ]

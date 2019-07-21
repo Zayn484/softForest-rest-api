@@ -32,7 +32,31 @@ class ChatSerializer(serializers.ModelSerializer):
         chat = Chat(group=group)
         chat.save()
         for username in participants:
-            contact = get_user_contact(username)
+            contact = get_user_contact(username, None)
             chat.participants.add(contact)
         chat.save()
         return chat
+
+
+class GroupSerializer(serializers.ModelSerializer):
+    """Serializer for chats"""
+
+    participants = ContactSerializer(many=True)
+
+    class Meta:
+        model = Chat
+        fields = ('id', 'messages', 'participants', 'group')
+
+    def create(self, validated_data):
+        participants = validated_data.pop('participants')
+        print(participants)
+        group = validated_data['group']
+        chat = Chat(group=group)
+        chat.save()
+        for id in participants:
+            contact = get_user_contact(None, id)
+            chat.participants.add(contact)
+        chat.save()
+        return chat
+
+

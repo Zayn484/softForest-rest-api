@@ -1,11 +1,14 @@
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save,pre_save
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.conf import settings
 import random
 import os
 import string
 from chat.models import Contact
+from datetime import datetime,timedelta
+from random import randint
+from django.core.mail import EmailMessage
 
 # Create your models here.
 
@@ -83,7 +86,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         """Django uses object to convert the object to a string"""
-
         return self.email
 
 
@@ -120,3 +122,38 @@ def user_post_reciever(sender, instance, created, **kwargs):
 
 
 post_save.connect(user_post_reciever, sender=User)
+
+def random_code_generator():
+    range_start = 10 ** (6 - 1)
+    range_end = (10 ** 6) - 1
+    return randint(range_start, range_end)
+
+class ForgetPassword(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    code = models.CharField(null=True,blank=True,max_length=6)
+    timestamp = models.DateTimeField(default=datetime.now()+timedelta(minutes=60))
+
+    def __str__(self):
+        return str(self.user)
+
+def forgetPassword_pre_save(sender, instance, *args, **kwargs):
+    instance.code = str(random_code_generator())
+    if instance.code:
+        try:
+            message = f'Your account verification Code for Forget Password is {instance.code}\nThanks For using SoftForest\nThe SoftForest Team'
+            email = EmailMessage(
+                f'Hi {instance.user.email} ',
+                message,
+                settings.EMAIL_HOST_USER,
+                [instance.user.email],
+                headers={'Message-ID': f'{instance.code}'},
+            )
+            email.send(fail_silently=True)
+            print(email)
+
+        except Exception as e:
+            print(e)
+
+
+pre_save.connect(forgetPassword_pre_save,sender=ForgetPassword)
+

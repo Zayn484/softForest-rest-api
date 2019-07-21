@@ -4,7 +4,11 @@ from django.contrib import admin
 from rest_framework import routers
 from django.urls import path, include
 
-from accounts.api.views import LoginViewSet, UserViewSet, ProfileViewSet
+from accounts.api.views import (
+    LoginViewSet,
+    UserViewSet,
+    ProfileViewSet,
+    ForgetPasswordViewSet)
 from projects.api.views import (
     ProjectViewSet,
     ProjectCardViewSet,
@@ -12,7 +16,8 @@ from projects.api.views import (
     FileDownloadViewSet,
     ProjectList,
     ProjectRandomList,
-    InfinitView
+    InfinitView,
+
 )
 
 from carts.api.views import CartViewSet, CartDetailView
@@ -34,6 +39,7 @@ router.register('order', OrderViewSet, base_name='order')
 router.register('payment', CardViewSet, base_name='payment')
 router.register('balance', BalanceViewSet, base_name='balance')
 router.register('sales', SoldSoftwareViewSet, base_name='sales')
+router.register('forget-password',ForgetPasswordViewSet,base_name='forget-Password')
 
 urlpatterns = [
     path('api/', include(router.urls)),
@@ -43,6 +49,8 @@ urlpatterns = [
     path('api/chat/', include('chat.api.urls', namespace='chat')),
     path('api/comments/', include('comments.api.urls', namespace='comments')),
     path('api/modification-requests/', include('modificationrequests.api.urls', namespace='modificationrequests')),
+    path('api/teams/', include('teams.api.urls', namespace='teams')),
+    path('api/analytics/', include('earnings.api.urls', namespace='earnings')),
     path('admin/', admin.site.urls)
 ]
 

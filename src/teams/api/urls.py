@@ -12,7 +12,7 @@ app_name = 'teams'
 
 router = DefaultRouter()
 router.register('invitations', InvitationViewSet)
-router.register('friends',FriendsViewSet, base_name='friends')
+router.register('friends', FriendsViewSet, base_name='friends')
 router.register('my-friends', MyFriendsViewSet, base_name='my-friends')
 
 urlpatterns = [

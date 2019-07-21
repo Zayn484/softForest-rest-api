@@ -13,9 +13,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'hd_+ioog^9rv3jdzqd3wq&8=a6pm%mu=@x+fmg49is0r5ut7(r'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['ec2-13-59-248-140.us-east-2.compute.amazonaws.com']
+ALLOWED_HOSTS = []
 
 # User model
 AUTH_USER_MODEL = 'accounts.User'
@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'channels',
     'django_filters',
     'import_export',
+    'django_extensions',
 
     # Our apps
     'accounts',
@@ -163,12 +164,12 @@ STATICFILES_DIR = [
 
 ]
 
-STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_cdn", "static_root")
+STATIC_ROOT = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), "static_cdn", "static_root")
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_cdn", "media_root")
+MEDIA_ROOT = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), "static_cdn", "media_root")
 
-PROTECTED_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_cdn", "protected_media")
+PROTECTED_ROOT = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), "static_cdn", "protected_media")
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 150000000  # 150 MB
 
@@ -191,6 +192,13 @@ REST_AUTH_SERIALIZERS = {
 CORS_ORIGIN_ALLOW_ALL = True
 
 
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'softforest484@gmail.com'
+EMAIL_HOST_PASSWORD = 'Nnnnn90@'
+EMAIL_PORT = 587 # Tried 465 as mentioned in;
+EMAIL_USE_TLS = True
+EMAIL_BACKENDS = 'django.core.mail.backends.smtp.EmailBackend'
 # ACCOUNT_EMAIL_VERIFICATION = 'none'
 # ACCOUNT_AUTHENTICATION_METHOD = 'email'
 # ACCOUNT_EMAIL_REQUIRED = True
+

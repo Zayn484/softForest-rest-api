@@ -1,7 +1,7 @@
 from accounts import models
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
-from accounts.models import Recommendation, Profile
+from accounts.models import Recommendation, Profile,ForgetPassword
 
 
 class ProfileImageSerializer(serializers.ModelSerializer):
@@ -125,4 +125,14 @@ class TokenSerializer(serializers.ModelSerializer):
     class Meta:
         model = Token
         fields = ('key', 'user_id')
+
+
+class ForgetPasswordSerialier(serializers.ModelSerializer):
+    """
+        Serializer for Forget Password
+    """
+    class Meta:
+        model = ForgetPassword
+        fields = ('user','code')
+
 

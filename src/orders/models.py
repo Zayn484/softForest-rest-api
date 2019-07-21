@@ -39,6 +39,7 @@ class Billing(models.Model):
 
 
 def billing_profile_created_receiver(sender,instance, *args,**kwargs):
+
     if not instance.customer_id and instance.user:
         customer  = stripe.Customer.create(email = instance.user)
         instance.customer_id = customer.id
@@ -68,9 +69,10 @@ class Card(models.Model):
 
 
 def card_id_create_receiver(sender,instance,*args,**kwargs):
+    print(instance.billing_profile)
+
     if instance.billing_profile and instance.stripe_id:
         card = Card.objects.filter(billing_profile=instance.billing_profile).values('stripe_id')
-        print(card)
         if not card:
             print('iffff')
             stripe.api_key = 'sk_test_6ETSL1XtldnJi4aM7e8rGqvd009nkra50X'

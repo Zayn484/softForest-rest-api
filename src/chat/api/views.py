@@ -9,7 +9,7 @@ from rest_framework.generics import (
 )
 from chat.models import Chat, Contact
 from chat.views import get_user_contact
-from .serializers import ChatSerializer
+from .serializers import ChatSerializer, GroupSerializer
 
 User = get_user_model()
 
@@ -23,10 +23,10 @@ class ChatListView(ListAPIView):
         username = self.request.query_params.get('username', None)
         group = self.request.GET.get('group')
         if username is not None:
-            contact = get_user_contact(username)
+            contact = get_user_contact(username, None)
             queryset = contact.chats.filter(group=False)
         if username and group:
-            contact = get_user_contact(username)
+            contact = get_user_contact(username, None)
             queryset = contact.chats.filter(group=True)
 
         return queryset
@@ -62,3 +62,7 @@ class ChatDeleteView(DestroyAPIView):
             })
 
 
+class GroupCreateView(CreateAPIView):
+    queryset = Chat.objects.all()
+    serializer_class = GroupSerializer
+    permission_classes = (permissions.AllowAny, )
